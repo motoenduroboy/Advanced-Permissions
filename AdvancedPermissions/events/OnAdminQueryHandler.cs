@@ -22,50 +22,50 @@ namespace AdvancedPermissions
 
         public void OnAdminQuery(AdminQueryEvent ev) {
             if (ev.Query == "REQUEST_DATA PLAYER_LIST SILENT") return;
-            else if (ev.Query.Contains("REQUEST_DATA SHORT-PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST");
-            else if (ev.Query.Contains("REQUEST_DATA PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_IP");
-            else if (ev.Query.Contains("REQUEST_DATA AUTH ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_AUTH");
+            else if (ev.Query.StartsWith("REQUEST_DATA SHORT-PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST");
+            else if (ev.Query.StartsWith("REQUEST_DATA PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_IP");
+            else if (ev.Query.StartsWith("REQUEST_DATA AUTH ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_AUTH");
 
-            else if (ev.Query.Contains("BAN ")) KickBanHandler(ev);
+            else if (ev.Query.StartsWith("BAN ")) KickBanHandler(ev);
 
-            else if (ev.Query.Contains("FORCECLASS ")) handler(ev, "AP_RM_PLAYER_FORCECLASS");
+            else if (ev.Query.StartsWith("FORCECLASS ")) handler(ev, "AP_RM_PLAYER_FORCECLASS");
 
-            else if (ev.Query.Contains("give ")) GiveHandler(ev);
+            else if (ev.Query.StartsWith("give ")) GiveHandler(ev);
 
-            else if (ev.Query.Contains("overwatch ")) handler(ev, "AP_RM_ADMIN_OVERWATCH");
-            else if (ev.Query.Contains("god ")) handler(ev, "AP_RM_ADMIN_GOD");
-            else if (ev.Query.Contains("bypass ")) handler(ev, "AP_RM_ADMIN_BYPASS");
-            else if (ev.Query.Contains("bring ")) handler(ev, "AP_RM_ADMIN_BRING");
-            else if (ev.Query.Contains("goto ")) handler(ev, "AP_RM_ADMIN_GOTO");
-            else if (ev.Query.Contains("heal ")) handler(ev, "AP_RM_ADMIN_HEAL");
-            else if (ev.Query.Contains("LOCKDOWN ")) handler(ev, "AP_RM_ADMIN_LOCKDOWN");
+            else if (ev.Query.StartsWith("overwatch ")) handler(ev, "AP_RM_ADMIN_OVERWATCH");
+            else if (ev.Query.StartsWith("god ")) handler(ev, "AP_RM_ADMIN_GOD");
+            else if (ev.Query.StartsWith("bypass ")) handler(ev, "AP_RM_ADMIN_BYPASS");
+            else if (ev.Query.StartsWith("bring ")) handler(ev, "AP_RM_ADMIN_BRING");
+            else if (ev.Query.StartsWith("goto ")) handler(ev, "AP_RM_ADMIN_GOTO");
+            else if (ev.Query.StartsWith("heal ")) handler(ev, "AP_RM_ADMIN_HEAL");
+            else if (ev.Query.StartsWith("LOCKDOWN ")) handler(ev, "AP_RM_ADMIN_LOCKDOWN");
 
             else if (ev.Query == "open **") handler(ev, "AP_RM_DOORS_OPEN_ALL"); // ALL
             else if (ev.Query == "open *") handler(ev, "AP_RM_DOORS_OPEN_ALL_LISTED");  // ALL Listed
             else if (ev.Query == "open !*") handler(ev, "AP_RM_DOORS_OPEN_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.Contains("open ")) handler(ev, "AP_RM_DOORS_OPEN_SINGLE"); // Single
+            else if (ev.Query.StartsWith("open ")) handler(ev, "AP_RM_DOORS_OPEN_SINGLE"); // Single
             else if (ev.Query == "close **") handler(ev, "AP_RM_DOORS_CLOSE_ALL"); // ALL
             else if (ev.Query == "close *") handler(ev, "AP_RM_DOORS_CLOSE_ALL_LISTED");  // ALL Listed
             else if (ev.Query == "close !*") handler(ev, "AP_RM_DOORS_CLOSE_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.Contains("close ")) handler(ev, "AP_RM_DOORS_CLOSE_SINGLE"); // Single
+            else if (ev.Query.StartsWith("close ")) handler(ev, "AP_RM_DOORS_CLOSE_SINGLE"); // Single
             else if (ev.Query == "lock **") handler(ev, "AP_RM_DOORS_LOCK_ALL"); // ALL
             else if (ev.Query == "lock *") handler(ev, "AP_RM_DOORS_LOCK_ALL_LISTED");  // ALL Listed
             else if (ev.Query == "lock !*") handler(ev, "AP_RM_DOORS_LOCK_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.Contains("lock ")) handler(ev, "AP_RM_DOORS_LOCK_SINGLE"); // Single
+            else if (ev.Query.StartsWith("lock ")) handler(ev, "AP_RM_DOORS_LOCK_SINGLE"); // Single
             else if (ev.Query == "unlock **") handler(ev, "AP_RM_DOORS_UNLOCK_ALL"); // ALL
             else if (ev.Query == "unlock *") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_LISTED");  // ALL Listed
             else if (ev.Query == "unlock !*") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.Contains("unlock ")) handler(ev, "AP_RM_DOORS_UNLOCK_SINGLE"); // Single
+            else if (ev.Query.StartsWith("unlock ")) handler(ev, "AP_RM_DOORS_UNLOCK_SINGLE"); // Single
             else if (ev.Query == "destroy **") handler(ev, "AP_RM_DOORS_DESTROY_ALL"); // ALL
             else if (ev.Query == "destroy *") handler(ev, "AP_RM_DOORS_DESTROY_ALL_LISTED");  // ALL Listed
             else if (ev.Query == "destroy !*") handler(ev, "AP_RM_DOORS_DESTROY_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.Contains("destroy ")) handler(ev, "AP_RM_DOORS_DESTROY_SINGLE"); // Single
-            else if (ev.Query.Contains("teleport ")) handler(ev, "AP_RM_DOORS_TELEPORT");
+            else if (ev.Query.StartsWith("destroy ")) handler(ev, "AP_RM_DOORS_DESTROY_SINGLE"); // Single
+            else if (ev.Query.StartsWith("teleport ")) handler(ev, "AP_RM_DOORS_TELEPORT");
 
-            else if (ev.Query.Contains("mute ")) handler(ev, "AP_RM_PLAYER_MUTE");
-            else if (ev.Query.Contains("unmute ")) handler(ev, "AP_RM_PLAYER_MUTE");
-            else if (ev.Query.Contains("imute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
-            else if (ev.Query.Contains("iunmute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
+            else if (ev.Query.StartsWith("mute ")) handler(ev, "AP_RM_PLAYER_MUTE");
+            else if (ev.Query.StartsWith("unmute ")) handler(ev, "AP_RM_PLAYER_MUTE");
+            else if (ev.Query.StartsWith("imute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
+            else if (ev.Query.StartsWith("iunmute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
 
             else if (ev.Query == "SERVER_EVENT FORCE_MTF_RESPAWN") handler(ev, "AP_RM_RESPAWN_MIF");
             else if (ev.Query == "SERVER_EVENT FORCE_CI_RESPAWN") handler(ev, "AP_RM_RESPAWN_CI");
@@ -78,11 +78,12 @@ namespace AdvancedPermissions
             else if (ev.Query == "SERVER_EVENT DETONATION_CANCEL") handler(ev, "AP_RM_DETONATION_CANCEL");
             else if (ev.Query == "SERVER_EVENT DETONATION_INSTANT") handler(ev, "AP_RM_DETONATION_INSTANT");
 
-            else if (ev.Query.Contains("setconfig friendly_fire")) handler(ev, "AP_RM_SETCONFIG_FRIENDLY_FIRE");
-            else if (ev.Query.Contains("setconfig spawn_protect_disable")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_DISABLE");
-            else if (ev.Query.Contains("setconfig player_list_title")) handler(ev, "AP_RM_SETCONFIG_PLAYERLIST_TITLE");
-            else if (ev.Query.Contains("setconfig pd_refresh_exit")) handler(ev, "AP_RM_SETCONFIG_PDREFRESH_EXIT");
-            else if (ev.Query.Contains("setconfig spawn_protect_time")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_TIME");
+            else if (ev.Query.StartsWith("setconfig friendly_fire")) handler(ev, "AP_RM_SETCONFIG_FRIENDLY_FIRE");
+            else if (ev.Query.StartsWith("setconfig spawn_protect_disable")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_DISABLE");
+            else if (ev.Query.StartsWith("setconfig player_list_title")) handler(ev, "AP_RM_SETCONFIG_PLAYERLIST_TITLE");
+            else if (ev.Query.StartsWith("setconfig pd_refresh_exit")) handler(ev, "AP_RM_SETCONFIG_PDREFRESH_EXIT");
+            else if (ev.Query.StartsWith("setconfig spawn_protect_time")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_TIME");
+
             else CommandHandler(ev);
         }
 
@@ -155,7 +156,8 @@ namespace AdvancedPermissions
                 return;
             }
 
-            int itemCode = Int32.Parse(args[args.Length-1]);
+            int itemCode;
+            if (!Int32.TryParse(args[args.Length - 1], out itemCode)) return;
 
             switch (itemCode)
             {
