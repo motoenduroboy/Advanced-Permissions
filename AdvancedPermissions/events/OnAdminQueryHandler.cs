@@ -1,4 +1,4 @@
-﻿using Smod2;
+using Smod2;
 using Smod2.API;
 using Smod2.EventHandlers;
 using Smod2.Events;
@@ -110,19 +110,19 @@ namespace AdvancedPermissions
 
             int time = Int32.Parse(args[args.Length - 1]);
 
-            if (time == 0)
+            if (time <= 0)
             {
                 perm = "AP_RM_PLAYER_KICK";
             }
-            else if (time > 0 && time < 31)
+            else if (time > 0 && time < 60)
             {
                 perm = "AP_RM_PLAYER_MINUTES";
             }
-            else if (time > 59 && time < 721)
+            else if (time > 59 && time < 1440)
             {
                 perm = "AP_RM_PLAYER_HOURS";
             }
-            else if (time > 1439 && time < 144001)
+            else if (time > 1439 && time < 525600)
             {
                 perm = "AP_RM_PLAYER_DAYS";
             }
