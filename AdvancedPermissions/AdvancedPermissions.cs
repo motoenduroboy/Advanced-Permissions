@@ -1,4 +1,4 @@
-﻿using Smod2;
+using Smod2;
 using Smod2.Attributes;
 using Smod2.EventHandlers;
 using Smod2.Events;
@@ -13,7 +13,7 @@ namespace AdvancedPermissions
         description = "More control of permissions",
         id = "moto.advanced.permissions",
         configPrefix = "ap",
-        version = "0.0.2",
+        version = "0.0.3",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
@@ -105,6 +105,9 @@ namespace AdvancedPermissions
             // Commands
             this.AddConfig(new Smod2.Config.ConfigSetting("AP_COMMANDS_*", new string[] { string.Empty }, false, true, "AP_COMMANDS_*"));
             this.AddConfig(new Smod2.Config.ConfigSetting("AP_COMMANDS", new Dictionary<string, string>(), false, true, "AP_COMMANDS"));
+            // Hierarchy
+            this.AddConfig(new Smod2.Config.ConfigSetting("AP_HIERARCHY_ENABLE", new bool(), false, true, "AP_HIERARCHY_ENABLE"));
+            this.AddConfig(new Smod2.Config.ConfigSetting("AP_HIERARCHY", new Dictionary<string, string>(), false, true, "AP_HIERARCHY"));
 
             IConfigFile config = ConfigManager.Manager.Config;
 
