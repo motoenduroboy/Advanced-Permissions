@@ -4,7 +4,7 @@ using Smod2.EventHandlers;
 using Smod2.Events;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace AdvancedPermissions
 {
@@ -21,89 +21,179 @@ namespace AdvancedPermissions
         }
 
         public void OnAdminQuery(AdminQueryEvent ev) {
-            if (ev.Query == "REQUEST_DATA PLAYER_LIST SILENT") return;
-            else if (ev.Query.StartsWith("REQUEST_DATA SHORT-PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST");
-            else if (ev.Query.StartsWith("REQUEST_DATA PLAYER ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_IP");
-            else if (ev.Query.StartsWith("REQUEST_DATA AUTH ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_AUTH");
+            string Query = ev.Query.ToLower();
+            if (Query == "request_data player_list silent") return;
+            else if (Query.StartsWith("request_data short-player ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST");
+            else if (Query.StartsWith("request_data player ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_IP");
+            else if (Query.StartsWith("request_data auth ")) handler(ev, "AP_RM_PlAYER_INFO_REQUEST_AUTH");
 
-            else if (ev.Query.StartsWith("BAN ")) KickBanHandler(ev);
+            else if (Query.StartsWith("ban ")) KickBanHandler(ev);
 
-            else if (ev.Query.StartsWith("FORCECLASS ")) handler(ev, "AP_RM_PLAYER_FORCECLASS");
+            else if (Query.StartsWith("forceclass ")) handler(ev, "AP_RM_PLAYER_FORCECLASS", true);
 
-            else if (ev.Query.StartsWith("give ")) GiveHandler(ev);
+            else if (Query.StartsWith("give ")) GiveHandler(ev);
 
-            else if (ev.Query.StartsWith("overwatch ")) handler(ev, "AP_RM_ADMIN_OVERWATCH");
-            else if (ev.Query.StartsWith("god ")) handler(ev, "AP_RM_ADMIN_GOD");
-            else if (ev.Query.StartsWith("bypass ")) handler(ev, "AP_RM_ADMIN_BYPASS");
-            else if (ev.Query.StartsWith("bring ")) handler(ev, "AP_RM_ADMIN_BRING");
-            else if (ev.Query.StartsWith("goto ")) handler(ev, "AP_RM_ADMIN_GOTO");
-            else if (ev.Query.StartsWith("heal ")) handler(ev, "AP_RM_ADMIN_HEAL");
-            else if (ev.Query.StartsWith("LOCKDOWN ")) handler(ev, "AP_RM_ADMIN_LOCKDOWN");
+            else if (Query.StartsWith("overwatch ")) handler(ev, "AP_RM_ADMIN_OVERWATCH", true);
+            else if (Query.StartsWith("god ")) handler(ev, "AP_RM_ADMIN_GOD", true);
+            else if (Query.StartsWith("bypass ")) handler(ev, "AP_RM_ADMIN_BYPASS", true);
+            else if (Query.StartsWith("bring ")) handler(ev, "AP_RM_ADMIN_BRING", true);
+            else if (Query.StartsWith("goto ")) handler(ev, "AP_RM_ADMIN_GOTO", true);
+            else if (Query.StartsWith("heal ")) handler(ev, "AP_RM_ADMIN_HEAL", true);
+            else if (Query.StartsWith("lockdown ")) handler(ev, "AP_RM_ADMIN_LOCKDOWN", true);
 
-            else if (ev.Query == "open **") handler(ev, "AP_RM_DOORS_OPEN_ALL"); // ALL
-            else if (ev.Query == "open *") handler(ev, "AP_RM_DOORS_OPEN_ALL_LISTED");  // ALL Listed
-            else if (ev.Query == "open !*") handler(ev, "AP_RM_DOORS_OPEN_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.StartsWith("open ")) handler(ev, "AP_RM_DOORS_OPEN_SINGLE"); // Single
-            else if (ev.Query == "close **") handler(ev, "AP_RM_DOORS_CLOSE_ALL"); // ALL
-            else if (ev.Query == "close *") handler(ev, "AP_RM_DOORS_CLOSE_ALL_LISTED");  // ALL Listed
-            else if (ev.Query == "close !*") handler(ev, "AP_RM_DOORS_CLOSE_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.StartsWith("close ")) handler(ev, "AP_RM_DOORS_CLOSE_SINGLE"); // Single
-            else if (ev.Query == "lock **") handler(ev, "AP_RM_DOORS_LOCK_ALL"); // ALL
-            else if (ev.Query == "lock *") handler(ev, "AP_RM_DOORS_LOCK_ALL_LISTED");  // ALL Listed
-            else if (ev.Query == "lock !*") handler(ev, "AP_RM_DOORS_LOCK_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.StartsWith("lock ")) handler(ev, "AP_RM_DOORS_LOCK_SINGLE"); // Single
-            else if (ev.Query == "unlock **") handler(ev, "AP_RM_DOORS_UNLOCK_ALL"); // ALL
-            else if (ev.Query == "unlock *") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_LISTED");  // ALL Listed
-            else if (ev.Query == "unlock !*") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.StartsWith("unlock ")) handler(ev, "AP_RM_DOORS_UNLOCK_SINGLE"); // Single
-            else if (ev.Query == "destroy **") handler(ev, "AP_RM_DOORS_DESTROY_ALL"); // ALL
-            else if (ev.Query == "destroy *") handler(ev, "AP_RM_DOORS_DESTROY_ALL_LISTED");  // ALL Listed
-            else if (ev.Query == "destroy !*") handler(ev, "AP_RM_DOORS_DESTROY_ALL_NOT_LISTED"); // ALL Not listed
-            else if (ev.Query.StartsWith("destroy ")) handler(ev, "AP_RM_DOORS_DESTROY_SINGLE"); // Single
-            else if (ev.Query.StartsWith("teleport ")) handler(ev, "AP_RM_DOORS_TELEPORT");
+            else if (Query == "open **") handler(ev, "AP_RM_DOORS_OPEN_ALL"); // ALL
+            else if (Query == "open *") handler(ev, "AP_RM_DOORS_OPEN_ALL_LISTED");  // ALL Listed
+            else if (Query == "open !*") handler(ev, "AP_RM_DOORS_OPEN_ALL_NOT_LISTED"); // ALL Not listed
+            else if (Query.StartsWith("open ")) handler(ev, "AP_RM_DOORS_OPEN_SINGLE"); // Single
+            else if (Query == "close **") handler(ev, "AP_RM_DOORS_CLOSE_ALL"); // ALL
+            else if (Query == "close *") handler(ev, "AP_RM_DOORS_CLOSE_ALL_LISTED");  // ALL Listed
+            else if (Query == "close !*") handler(ev, "AP_RM_DOORS_CLOSE_ALL_NOT_LISTED"); // ALL Not listed
+            else if (Query.StartsWith("close ")) handler(ev, "AP_RM_DOORS_CLOSE_SINGLE"); // Single
+            else if (Query == "lock **") handler(ev, "AP_RM_DOORS_LOCK_ALL"); // ALL
+            else if (Query == "lock *") handler(ev, "AP_RM_DOORS_LOCK_ALL_LISTED");  // ALL Listed
+            else if (Query == "lock !*") handler(ev, "AP_RM_DOORS_LOCK_ALL_NOT_LISTED"); // ALL Not listed
+            else if (Query.StartsWith("lock ")) handler(ev, "AP_RM_DOORS_LOCK_SINGLE"); // Single
+            else if (Query == "unlock **") handler(ev, "AP_RM_DOORS_UNLOCK_ALL"); // ALL
+            else if (Query == "unlock *") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_LISTED");  // ALL Listed
+            else if (Query == "unlock !*") handler(ev, "AP_RM_DOORS_UNLOCK_ALL_NOT_LISTED"); // ALL Not listed
+            else if (Query.StartsWith("unlock ")) handler(ev, "AP_RM_DOORS_UNLOCK_SINGLE"); // Single
+            else if (Query == "destroy **") handler(ev, "AP_RM_DOORS_DESTROY_ALL"); // ALL
+            else if (Query == "destroy *") handler(ev, "AP_RM_DOORS_DESTROY_ALL_LISTED");  // ALL Listed
+            else if (Query == "destroy !*") handler(ev, "AP_RM_DOORS_DESTROY_ALL_NOT_LISTED"); // ALL Not listed
+            else if (Query.StartsWith("destroy ")) handler(ev, "AP_RM_DOORS_DESTROY_SINGLE"); // Single
+            else if (Query.StartsWith("teleport ")) handler(ev, "AP_RM_DOORS_TELEPORT");
 
-            else if (ev.Query.StartsWith("mute ")) handler(ev, "AP_RM_PLAYER_MUTE");
-            else if (ev.Query.StartsWith("unmute ")) handler(ev, "AP_RM_PLAYER_MUTE");
-            else if (ev.Query.StartsWith("imute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
-            else if (ev.Query.StartsWith("iunmute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM");
+            else if (Query.StartsWith("mute ")) handler(ev, "AP_RM_PLAYER_MUTE", true);
+            else if (Query.StartsWith("unmute ")) handler(ev, "AP_RM_PLAYER_MUTE", true);
+            else if (Query.StartsWith("imute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM", true);
+            else if (Query.StartsWith("iunmute ")) handler(ev, "AP_RM_PLAYER_MUTE_INTERCOM", true);
 
-            else if (ev.Query == "SERVER_EVENT FORCE_MTF_RESPAWN") handler(ev, "AP_RM_RESPAWN_MIF");
-            else if (ev.Query == "SERVER_EVENT FORCE_CI_RESPAWN") handler(ev, "AP_RM_RESPAWN_CI");
-            else if (ev.Query == "SERVER_EVENT ROUND_RESTART") handler(ev, "AP_RM_RESTART_ROUND");
-            else if (ev.Query == "FORCESTART") handler(ev, "AP_RM_FORCE_START");
-            else if (ev.Query == "SERVER_EVENT TERMINATE_UNCONN") handler(ev, "AP_RM_KICK_UNCONNECTED");
-            else if (ev.Query == "INTERCOM-TIMEOUT") handler(ev, "AP_RM_INTERCOM_TIMEOUT");
-            else if (ev.Query == "INTERCOM-RESET") handler(ev, "AP_RM_INTERCOMM_RESET");
-            else if (ev.Query == "SERVER_EVENT DETONATION_START") handler(ev, "AP_RM_DETONATION_START");
-            else if (ev.Query == "SERVER_EVENT DETONATION_CANCEL") handler(ev, "AP_RM_DETONATION_CANCEL");
-            else if (ev.Query == "SERVER_EVENT DETONATION_INSTANT") handler(ev, "AP_RM_DETONATION_INSTANT");
+            else if (Query == "server_event force_mtf_respawn") handler(ev, "AP_RM_RESPAWN_MIF");
+            else if (Query == "server_event force_ci_respawn") handler(ev, "AP_RM_RESPAWN_CI");
+            else if (Query == "server_event round_restart") handler(ev, "AP_RM_RESTART_ROUND");
+            else if (Query == "forcestart") handler(ev, "AP_RM_FORCE_START");
+            else if (Query == "server_event terminate_unconn") handler(ev, "AP_RM_KICK_UNCONNECTED");
+            else if (Query == "intercom-timeout") handler(ev, "AP_RM_INTERCOM_TIMEOUT");
+            else if (Query == "intercom-reset") handler(ev, "AP_RM_INTERCOMM_RESET");
+            else if (Query == "server_event detonation_start") handler(ev, "AP_RM_DETONATION_START");
+            else if (Query == "server_event detonation_cancel") handler(ev, "AP_RM_DETONATION_CANCEL");
+            else if (Query == "server_event detonation_instant") handler(ev, "AP_RM_DETONATION_INSTANT");
 
-            else if (ev.Query.StartsWith("setconfig friendly_fire")) handler(ev, "AP_RM_SETCONFIG_FRIENDLY_FIRE");
-            else if (ev.Query.StartsWith("setconfig spawn_protect_disable")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_DISABLE");
-            else if (ev.Query.StartsWith("setconfig player_list_title")) handler(ev, "AP_RM_SETCONFIG_PLAYERLIST_TITLE");
-            else if (ev.Query.StartsWith("setconfig pd_refresh_exit")) handler(ev, "AP_RM_SETCONFIG_PDREFRESH_EXIT");
-            else if (ev.Query.StartsWith("setconfig spawn_protect_time")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_TIME");
+            else if (Query.StartsWith("setconfig friendly_fire")) handler(ev, "AP_RM_SETCONFIG_FRIENDLY_FIRE");
+            else if (Query.StartsWith("setconfig spawn_protect_disable")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_DISABLE");
+            else if (Query.StartsWith("setconfig player_list_title")) handler(ev, "AP_RM_SETCONFIG_PLAYERLIST_TITLE");
+            else if (Query.StartsWith("setconfig pd_refresh_exit")) handler(ev, "AP_RM_SETCONFIG_PDREFRESH_EXIT");
+            else if (Query.StartsWith("setconfig spawn_protect_time")) handler(ev, "AP_RM_SETCONFIG_SPAWNPROTECT_TIME");
 
             else CommandHandler(ev);
         }
 
-        private void handler(AdminQueryEvent ev, string perm)
+        private void handler(AdminQueryEvent ev, string perm, bool hierarchy = false)
         {
+            Server server = PluginManager.Manager.Server;
+            if (hierarchy && config.GetBoolValue("AP_HIERARCHY_ENABLE", false, false)) {
+                bool isHigher = true;
+
+                string[] queryArgs = ev.Query.Split(' ');
+
+                if (queryArgs.Length > 1)
+                {
+                    List<Player> playerList = server.GetPlayers("");
+
+                    string[] players = queryArgs[1].Split('.');
+                    playerList = playerList.FindAll(p => {
+                        if (Array.IndexOf(players, p.PlayerId.ToString()) > -1) return true;
+                        return false;
+                    });
+
+                    if (playerList.Count > 0) {
+                        foreach (Player player in playerList) if (!checkHierarchy(ev.Admin, player)) isHigher = false;
+                    }
+                }
+
+                if (!isHigher) {
+                    ev.Successful = false;
+                    ev.Handled = true;
+                    ev.Output = "Player is higher rank than you!";
+                }
+            }
+
             if (!hasPerm(ev.Admin.SteamId, ev.Admin.GetUserGroup().Name, perm))
             {
                 ev.Successful = false;
                 ev.Handled = true;
-                ev.Output = "You Don't Have Permission to do that :D";
+                ev.Output = "You Don't Have Permission to do that! You require the permission " + perm + "!";
             }
         }
 
         private void KickBanHandler(AdminQueryEvent ev)
         {
+            Server server = PluginManager.Manager.Server;
+            if (config.GetBoolValue("AP_HIERARCHY_ENABLE", false, false))
+            {
+                bool isHigher = true;
+
+                string[] queryArgs = ev.Query.Split(' ');
+
+                if (queryArgs.Length > 1)
+                {
+                    List<Player> playerList = server.GetPlayers("");
+
+                    string[] players = queryArgs[1].Split('.');
+                    playerList = playerList.FindAll(p => {
+                        if (Array.IndexOf(players, p.PlayerId.ToString()) > -1) return true;
+                        return false;
+                    });
+
+                    if (playerList.Count > 0)
+                    {
+                        foreach (Player player in playerList) if (!checkHierarchy(ev.Admin, player)) isHigher = false;
+                    }
+                }
+
+                if (!isHigher)
+                {
+                    ev.Successful = false;
+                    ev.Handled = true;
+                    ev.Output = "Player is higher rank than you!";
+                }
+            }
+
+            if (config.GetBoolValue("AP_DISABLE", false, false))
+            {
+
+                bool isHigher = true;
+
+                string[] queryArgs = ev.Query.Split(' ');
+
+                if (queryArgs.Length > 1)
+                {
+                    List<Player> playerList = new List<Player>();
+
+                    foreach (string plyID in queryArgs[1].Split('.'))
+                    {
+                        playerList.AddRange(server.GetPlayers(plyID));
+                    }
+
+                    if (playerList.Count > 0)
+                    {
+                        foreach (Player player in playerList) if (!checkHierarchy(ev.Admin, player)) isHigher = false;
+                    }
+                }
+
+                if (!isHigher)
+                {
+                    ev.Successful = false;
+                    ev.Handled = true;
+                    ev.Output = "Player is higher rank than you!";
+                }
+            }
+
             string perm = "";
 
             string[] args = ev.Query.Split(' ');
 
-            if (args.Length != 3)
+            if (args.Length < 3)
             {
                 return;
             }
@@ -141,12 +231,43 @@ namespace AdvancedPermissions
             {
                 ev.Successful = false;
                 ev.Handled = true;
-                ev.Output = "You Don't Have Permission to do that :D";
+                ev.Output = "You Don't Have Permission to do that! You require the permission " + perm + "!";
             }
         }
 
         private void GiveHandler(AdminQueryEvent ev)
         {
+            Server server = PluginManager.Manager.Server;
+            if (config.GetBoolValue("AP_HIERARCHY_ENABLE", false, false))
+            {
+                bool isHigher = true;
+
+                string[] queryArgs = ev.Query.Split(' ');
+
+                if (queryArgs.Length > 1)
+                {
+                    List<Player> playerList = server.GetPlayers("");
+
+                    string[] players = queryArgs[1].Split('.');
+                    playerList = playerList.FindAll(p => {
+                        if (Array.IndexOf(players, p.PlayerId.ToString()) > -1) return true;
+                        return false;
+                    });
+
+                    if (playerList.Count > 0)
+                    {
+                        foreach (Player player in playerList) if (!checkHierarchy(ev.Admin, player)) isHigher = false;
+                    }
+                }
+
+                if (!isHigher)
+                {
+                    ev.Successful = false;
+                    ev.Handled = true;
+                    ev.Output = "Player is higher rank than you!";
+                }
+            }
+
             string perm = "";
 
             string[] args = ev.Query.Split(' ');
@@ -209,7 +330,7 @@ namespace AdvancedPermissions
             {
                 ev.Successful = false;
                 ev.Handled = true;
-                ev.Output = "You Don't Have Permission to do that :D";
+                ev.Output = "You Don't Have Permission to do that! You require the permission " + perm + "!";
             }
         }
 
@@ -217,15 +338,13 @@ namespace AdvancedPermissions
         {
             try
             {
-                bool canDo = false;
-
                 int pos = Array.IndexOf(config.GetListValue("AP_COMMANDS_*", false), ev.Admin.SteamId);
 
-                if (pos > -1) canDo = true;
+                if (pos > -1) return;
 
                 pos = Array.IndexOf(config.GetListValue("AP_COMMANDS_*", false), ev.Admin.GetUserGroup().Name);
 
-                if (pos > -1) canDo = true;
+                if (pos > -1) return;
                 
                 Dictionary<string, string> dic = config.GetDictValue("AP_COMMANDS");
 
@@ -234,23 +353,30 @@ namespace AdvancedPermissions
                 {
                     ev.Successful = false;
                     ev.Handled = true;
+                    ev.Output = "You Don't Have Permission to do that!";
                     return;
                 }
+
                 string[] users = ParseCommaSeparatedString(listString);
 
-                pos = Array.IndexOf(users, ev.Admin.SteamId);
+                bool canDo = false;
 
-                if (pos > -1) canDo = true;
+                if (users.Length > 0) {
 
-                pos = Array.IndexOf(users, ev.Admin.GetUserGroup().Name);
+                    pos = Array.IndexOf(users, ev.Admin.SteamId);
 
-                if (pos > -1) canDo = true;
+                    if (pos > -1) canDo = true;
+
+                    pos = Array.IndexOf(users, ev.Admin.GetUserGroup().Name);
+
+                    if (pos > -1) canDo = true;
+                }
 
                 if (!canDo)
                 {
                     ev.Successful = false;
                     ev.Handled = true;
-                    ev.Output = "You Don't Have Permission to do that :D";
+                    ev.Output = "You Don't Have Permission to do that!";
                 }
             }
             catch (Exception e)
@@ -281,13 +407,46 @@ namespace AdvancedPermissions
             if (pos > -1) return true; else return false;
         }
 
-        // Pulled From YamlConfig in Assembly-CSharp
-        private string[] ParseCommaSeparatedString(string data)
+        private bool checkHierarchy(Player admin, Player player)
+        {
+            if (admin != null && player != null && admin.SteamId == player.SteamId) return true;
+
+            Dictionary<string, string> dic = config.GetDictValue("AP_HIERARCHY");
+
+            if (dic.Count == 0) return true; // Nothing is in dictionary so treat it like hierarchy is disabled
+
+            UserGroup aug = admin.GetUserGroup();
+            string adminRankString = dic.FirstOrDefault(x => x.Value == admin.SteamId || x.Value == aug.Name).Key;
+
+            UserGroup pug = player.GetUserGroup();
+            string playerRankString = dic.FirstOrDefault(x => {
+                if (x.Value == player.SteamId) return true;
+                if (pug != null && x.Value == pug.Name) return true;
+                else return false;
+            }).Key;
+
+            adminRankString = !String.IsNullOrEmpty(adminRankString) ? adminRankString : "100";
+            playerRankString = !String.IsNullOrEmpty(playerRankString) ? playerRankString : "100";
+
+            int adminRank = 100;
+            int playerRank = 100;
+
+            if (!Int32.TryParse(adminRankString, out adminRank) || !Int32.TryParse(playerRankString, out playerRank)) {
+                plugin.Warn("One of the hierarchy dictionary keys is not a number");
+                return false;
+            }
+
+            if (adminRank < playerRank) return true;
+            else return false;
+        }
+
+        // Pulled From YamlConfig in Assembly-CSharp (with modifications)
+        public string[] ParseCommaSeparatedString(string data)
         {
             if (!data.StartsWith("[") || !data.EndsWith("]"))
-                return (string[])null;
+                return new string[0];
             data = data.Substring(1, data.Length - 2);
-            return data.Split(new string[1] { ", " }, StringSplitOptions.None);
+            return data.Split(new string[2] { "| ", "|" }, StringSplitOptions.None);
         }
 
         public void OnRoundStart(RoundStartEvent ev)
