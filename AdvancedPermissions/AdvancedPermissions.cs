@@ -12,8 +12,7 @@ namespace AdvancedPermissions
         name = "AdvancedPermissions",
         description = "More control of permissions",
         id = "moto.advanced.permissions",
-        configPrefix = "ap",
-        version = "0.0.3",
+        version = "0.0.4",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0
@@ -109,17 +108,13 @@ namespace AdvancedPermissions
             this.AddConfig(new Smod2.Config.ConfigSetting("AP_HIERARCHY_ENABLE", new bool(), false, true, "AP_HIERARCHY_ENABLE"));
             this.AddConfig(new Smod2.Config.ConfigSetting("AP_HIERARCHY", new Dictionary<string, string>(), false, true, "AP_HIERARCHY"));
 
-            IConfigFile config = ConfigManager.Manager.Config;
-
-            if (config.GetBoolValue("AP_DISABLE", false, false))
+            if (this.GetConfigBool("AP_DISABLE"))
             {
                 this.Info("AP_DISABLE is enabled, Advance Permissions will not start");
                 return;
             }
-
-            OnAdminQueryHandler onAdminQueryHandler = new OnAdminQueryHandler(this, config);
-            this.AddEventHandler(typeof(IEventHandlerAdminQuery), onAdminQueryHandler, Priority.Highest);
-            this.AddEventHandler(typeof(IEventHandlerRoundStart), onAdminQueryHandler, Priority.Normal);
+            
+            this.AddEventHandler(typeof(IEventHandlerAdminQuery), new OnAdminQueryHandler(this), Priority.Highest);
         }
 	}
 }
