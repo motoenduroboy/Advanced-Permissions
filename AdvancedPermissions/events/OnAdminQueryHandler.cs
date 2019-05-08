@@ -21,9 +21,6 @@ namespace AdvancedPermissions
             string Query = ev.Query.ToLower();
             string[] splitQuery = Query.Split(' ');
 
-            plugin.Info(Query);
-            plugin.Info(splitQuery.Length.ToString());
-
             switch (Query)
             {
                 case "request_data player_list silent": break;
