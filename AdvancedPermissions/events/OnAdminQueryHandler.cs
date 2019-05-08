@@ -424,6 +424,7 @@ namespace AdvancedPermissions
                     break;
                 case (int)ItemType.DROPPED_7:
                 case (int)ItemType.DROPPED_9:
+                case (int)ItemType.DROPPED_5:
                     perm = "AP_RM_PLAYER_GIVE_AMMO";
                     break;
                 case (int) ItemType.COIN:
