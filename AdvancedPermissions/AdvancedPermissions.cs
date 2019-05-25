@@ -12,7 +12,7 @@ namespace AdvancedPermissions
         name = "AdvancedPermissions",
         description = "More control of permissions",
         id = "moto.advanced.permissions",
-        version = "0.0.4",
+        version = "0.0.5",
         SmodMajor = 3,
         SmodMinor = 4,
         SmodRevision = 0

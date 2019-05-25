@@ -193,6 +193,15 @@ namespace AdvancedPermissions
 
         private void handler(AdminQueryEvent ev, string perm, bool hierarchy = false)
         {
+            ServerRoles serverRoles = ((UnityEngine.GameObject) ev.Admin.GetGameObject()).GetComponent<ServerRoles>();
+
+            PermissionsHandler permissionsHandler = ServerStatic.GetPermissionsHandler();
+
+            if ((permissionsHandler.StaffAccess && serverRoles.Staff) || (permissionsHandler.ManagersAccess && serverRoles.RaEverywhere) || (permissionsHandler.BanningTeamAccess && serverRoles.RaEverywhere))
+            {
+                return;
+            }
+
             Server server = PluginManager.Manager.Server;
             if (hierarchy && plugin.GetConfigBool("AP_HIERARCHY_ENABLE")) {
                 bool isHigher = true;
@@ -221,7 +230,7 @@ namespace AdvancedPermissions
                 }
             }
 
-            if (!hasPerm(ev.Admin.SteamId, ev.Admin.GetUserGroup().Name, perm))
+            if (!hasPerm(ev.Admin, ev.Admin.GetUserGroup().Name, perm))
             {
                 ev.Successful = false;
                 ev.Handled = true;
@@ -231,6 +240,15 @@ namespace AdvancedPermissions
 
         private void KickBanHandler(AdminQueryEvent ev)
         {
+            ServerRoles serverRoles = ((UnityEngine.GameObject)ev.Admin.GetGameObject()).GetComponent<ServerRoles>();
+
+            PermissionsHandler permissionsHandler = ServerStatic.GetPermissionsHandler();
+
+            if ((permissionsHandler.StaffAccess && serverRoles.Staff) || (permissionsHandler.ManagersAccess && serverRoles.RaEverywhere) || (permissionsHandler.BanningTeamAccess && serverRoles.RaEverywhere))
+            {
+                return;
+            }
+
             Server server = PluginManager.Manager.Server;
             if (plugin.GetConfigBool("AP_HIERARCHY_ENABLE"))
             {
@@ -330,7 +348,7 @@ namespace AdvancedPermissions
                 return;
             }
 
-            if (!hasPerm(ev.Admin.SteamId, ev.Admin.GetUserGroup().Name, perm))
+            if (!hasPerm(ev.Admin, ev.Admin.GetUserGroup().Name, perm))
             {
                 ev.Successful = false;
                 ev.Handled = true;
@@ -340,6 +358,15 @@ namespace AdvancedPermissions
 
         private void GiveHandler(AdminQueryEvent ev)
         {
+            ServerRoles serverRoles = ((UnityEngine.GameObject)ev.Admin.GetGameObject()).GetComponent<ServerRoles>();
+
+            PermissionsHandler permissionsHandler = ServerStatic.GetPermissionsHandler();
+
+            if ((permissionsHandler.StaffAccess && serverRoles.Staff) || (permissionsHandler.ManagersAccess && serverRoles.RaEverywhere) || (permissionsHandler.BanningTeamAccess && serverRoles.RaEverywhere))
+            {
+                return;
+            }
+
             Server server = PluginManager.Manager.Server;
             if (plugin.GetConfigBool("AP_HIERARCHY_ENABLE"))
             {
@@ -419,9 +446,9 @@ namespace AdvancedPermissions
                 case (int) ItemType.FLASHBANG:
                     perm = "AP_RM_PLAYER_GIVE_GRENADE";
                     break;
-                case (int)ItemType.DROPPED_7:
-                case (int)ItemType.DROPPED_9:
-                case (int)ItemType.DROPPED_5:
+                case (int) ItemType.DROPPED_7:
+                case (int) ItemType.DROPPED_9:
+                case (int) ItemType.DROPPED_5:
                     perm = "AP_RM_PLAYER_GIVE_AMMO";
                     break;
                 case (int) ItemType.COIN:
@@ -430,7 +457,7 @@ namespace AdvancedPermissions
                     break;
             }
 
-            if (!hasPerm(ev.Admin.SteamId, ev.Admin.GetUserGroup().Name, perm))
+            if (!hasPerm(ev.Admin, ev.Admin.GetUserGroup().Name, perm))
             {
                 ev.Successful = false;
                 ev.Handled = true;
@@ -440,6 +467,15 @@ namespace AdvancedPermissions
 
         private void CommandHandler(AdminQueryEvent ev)
         {
+            ServerRoles serverRoles = ((UnityEngine.GameObject)ev.Admin.GetGameObject()).GetComponent<ServerRoles>();
+
+            PermissionsHandler permissionsHandler = ServerStatic.GetPermissionsHandler();
+
+            if ((permissionsHandler.StaffAccess && serverRoles.Staff) || (permissionsHandler.ManagersAccess && serverRoles.RaEverywhere) || (permissionsHandler.BanningTeamAccess && serverRoles.RaEverywhere))
+            {
+                return;
+            }
+
             try
             {
                 int pos = Array.IndexOf(plugin.GetConfigList("AP_COMMANDS_*"), ev.Admin.SteamId);
@@ -492,9 +528,9 @@ namespace AdvancedPermissions
             
         }
 
-        private bool hasPerm(string SteamId, string UserGroupName, string Perm)
+        private bool hasPerm(Player player, string UserGroupName, string Perm)
         {
-            int pos = Array.IndexOf(plugin.GetConfigList("AP_RM_*"), SteamId);
+            int pos = Array.IndexOf(plugin.GetConfigList("AP_RM_*"), player.SteamId);
 
             if (pos > -1) return true;
 
@@ -502,7 +538,7 @@ namespace AdvancedPermissions
 
             if (pos > -1) return true;
 
-            pos = Array.IndexOf(plugin.GetConfigList(Perm), SteamId);
+            pos = Array.IndexOf(plugin.GetConfigList(Perm), player.SteamId);
 
             if (pos > -1) return true;
 
@@ -519,14 +555,44 @@ namespace AdvancedPermissions
 
             if (dic.Count == 0) return true; // Nothing is in dictionary so treat it like hierarchy is disabled
 
-            UserGroup aug = admin.GetUserGroup();
-            string adminRankString = dic.FirstOrDefault(x => x.Value == admin.SteamId || x.Value == aug.Name).Key;
+            Smod2.API.UserGroup aug = admin.GetUserGroup();
+            string adminRankString = dic.FirstOrDefault(x => {
+                string[] parse = ParseCommaSeparatedString(x.Value);
+                if (parse.Length > 0)
+                {
+                    bool able = false;
+                    foreach (string y in parse)
+                    {
+                        if (y == player.SteamId) able = true;
+                        else if (aug != null && y == aug.Name) able = true;
+                    }
+                    return able;
+                }
+                else
+                {
+                    return x.Value == admin.SteamId || x.Value == aug.Name;
+                }
+                
+            }).Key;
 
-            UserGroup pug = player.GetUserGroup();
+            Smod2.API.UserGroup pug = player.GetUserGroup();
             string playerRankString = dic.FirstOrDefault(x => {
-                if (x.Value == player.SteamId) return true;
-                if (pug != null && x.Value == pug.Name) return true;
-                else return false;
+                string[] parse = ParseCommaSeparatedString(x.Value);
+                if (parse.Length > 0)
+                {
+                    bool able = false;
+                    foreach (string y in parse) {
+                        if (y == player.SteamId) able = true;
+                        else if (pug != null && y == pug.Name) able = true;
+                    }
+                    return able;
+                }
+                else
+                {
+                    if (x.Value == player.SteamId) return true;
+                    if (pug != null && x.Value == pug.Name) return true;
+                    else return false;
+                }
             }).Key;
 
             adminRankString = !String.IsNullOrEmpty(adminRankString) ? adminRankString : "100";
